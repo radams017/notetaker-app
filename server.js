@@ -2,6 +2,7 @@
 const express = require('express');
 const path = require('path');
 const File = require('fs');
+const generateUniqueId = require('generate-unique-id');
 
 // set express app
 const app = express();
@@ -15,6 +16,12 @@ app.use(express.json());
 
 // to push data into
 let notes;
+
+// id gen
+const id = generateUniqueId({
+    length: 10,
+    useLetters: false
+})
 
 
 // GET routes
@@ -30,14 +37,17 @@ app.use(express.static('public'));
 
 // POST routes
 app.post('/api/notes', (req, res) => {
-    console.log(req.body)
+
+    newNote = req.body;
+
+    newNote.id = id;
 
     File.readFile('./db/db.json', 'utf8', (err, data) => {
         if (err) throw err;
 
         notes = JSON.parse(data);
 
-        notes.push(req.body)
+        notes.push(newNote)
 
         File.writeFile('./db/db.json', JSON.stringify(notes), (err) => {
             if (err) throw err;
