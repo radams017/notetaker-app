@@ -33,7 +33,7 @@ app.get('/notes', (req, res) => res.sendFile(path.join(__dirname, '/public/notes
 
 app.get('/api/notes', (req, res) => res.sendFile(path.join(__dirname, './db/db.json')));
 
-app.get(`/api/notes/:${id}`, (req, res) => res.sendFile(path.join(__dirname, './db/db.json')));
+app.get('/api/notes/:id', (req, res) => res.sendFile(path.join(__dirname, './db/db.json')));
 
 // POST routes
 app.post('/api/notes', (req, res) => {
@@ -55,6 +55,21 @@ app.post('/api/notes', (req, res) => {
 
     })
 });
+
+// DELETE route
+app.delete('/api/notes/:id', (req, res) => {
+
+    File.readFile('./db/db.json', (err, data) => {
+        if (err) throw err;
+
+        const notes = JSON.parse(data);
+        const remainder = notes.filter(note => note.id != req.params.id)
+
+        File.writeFile('./db/db.json', JSON.stringify(remainder), err => {
+            if (err) throw err;
+        })
+    })
+})
 
 // initialize server
 app.listen(PORT, () => console.log(`App listening on PORT ${PORT}`));
