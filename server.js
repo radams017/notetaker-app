@@ -51,6 +51,7 @@ app.post('/api/notes', (req, res) => {
 
         File.writeFile('./db/db.json', JSON.stringify(notes), (err) => {
             if (err) throw err;
+            res.send(notes)
         })
 
     })
@@ -67,6 +68,7 @@ app.delete('/api/notes/:id', (req, res) => {
 
         File.writeFile('./db/db.json', JSON.stringify(remainder), err => {
             if (err) throw err;
+            res.send(remainder)
         })
     })
 })
